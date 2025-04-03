@@ -1,0 +1,21 @@
+function add()
+{
+    var a = 10;
+    var b = 20;
+    var c = a + b;
+    return c;
+}
+console.log("the sum of a and b is :"+ add())
+the sum of a and b is :30
+
+var actor = "kamal"
+var player = "Dhoni"
+var movie = "goat"
+
+function favourite()
+{
+    console.log("Favourite Actor :"+actor)
+    console.log("Favourite player :"+player)
+    console.log("Favourite movie :"+movie)
+}
+favourite()
