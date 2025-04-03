@@ -1,0 +1,7 @@
+var price = 200
+var product = "car"
+const tax = 20
+var Total = price+tax
+console.log("price without tax:"+price)
+console.log("Total price is :"+Total)
+console.log("product : "+product)
