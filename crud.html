@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>CRUD operation</title>
+  <script>
+    let users = [];
+    let editingIndex = -1;
+
+    function renderUsers() {
+      const list = document.getElementById('userList');
+      list.innerHTML = '';
+
+      users.forEach((name, index) => {
+        const div = document.createElement('div');
+        div.className = 'user-item';
+
+        div.innerHTML = `
+          <strong >${index+1}. ${name} </strong>
+          <button class="edit-btn" onclick="editUser(${index})">Edit</button>
+          <button class="delete-btn" onclick="deleteUser(${index})">Delete</button>
+        `;
+
+        list.appendChild(div);
+      });
+    }
+
+    function addUser() {
+      const input = document.getElementById('nameInput');
+      const name = input.value.trim();
+
+      if (!name){
+        alert("Enter the Name")
+      };
+
+      if (editingIndex >= 0) {
+        users[editingIndex] = name;
+        editingIndex = -1;
+      } else {
+        users.push(name);
+      }
+
+      input.value = '';
+      renderUsers();
+
+      const container = document.getElementById('mainContainer');
+      container.style.maxWidth = '450px';
+    }
+
+    function editUser(index) {
+      document.getElementById('nameInput').value = users[index];
+      editingIndex = index;
+    }
+
+    function deleteUser(index) {
+      users.splice(index, 1);
+      renderUsers();
+    }
+
+    renderUsers(); 
+
+    document.getElementById('nameInput').addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+      addUser();
+    } });
+  </script>
+
+  <style>
+    input{
+        padding: 0.5rem;
+        border-radius: 10px ;
+        border-color: #000000;
+
+    }
+      button{
+        background-color: #00ff40;
+        color: #000000;
+        padding: 0.5rem;
+        border: 1px solid #000000;
+        border-radius: 10px;
+      }
+      .edit-btn {
+       background-color: #87f0fa;
+       
+      }
+
+      .delete-btn {
+      background-color: #ff4d4d;
+      margin-left: 0.5rem;
+      color: white;
+}
+
+      body { font-family: Arial; padding: 2rem; }
+    input, button { margin: 0.5rem;}
+
+    .user-item {
+      display: flex;
+      justify-content:safe;
+      align-items: center;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      background-color: #ffffff;
+      border-radius: 8px;
+      color: rgb(0, 0, 0); }
+
+    
+
+    .container {
+  max-width: 400px;
+  transition: max-width 2s ease;
+  margin: 50px auto; 
+  padding: 2rem;
+  border: 1px solid #000000;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #c6e9eb;
+  text-align: left;
+}
+
+  </style>
+
+  
+</head>
+<body>
+    <div class="container" id="mainContainer"> 
+       
+
+  <h2>CRUD operations</h2>
+
+  <input class="input" type="text" id="nameInput" placeholder="Enter name" />
+  <button class="button" onclick="addUser()">Add User</button>
+
+  <div id="userList"></div>
+
+  
+  
+  </div>
+</body>
+</html>
