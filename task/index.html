@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Page</title>
+    <link rel='stylesheet' type='text/css' media='screen' href='style.css'>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>CRUD IN TABLE</h2>
+        <form id="userForm" style="display: flex; flex-direction: column; width: 100%; gap: 10px;">
+            <div class="form-row">
+                <label for="Name">Name:</label>
+                <input id="Name" type="text" placeholder="Enter name">
+            </div>    
+
+            <div class="form-row">
+                <label for="Phone">Phone:</label>
+                <input id="Phone" type="number" placeholder="Phone Number">
+            </div>
+
+            <div class="form-row">
+                <label for="Email">Email:</label>
+                <input id="Email" type="email" placeholder="Email">
+            </div>
+
+            <div class="form-row">
+                <label for="Status">Status:</label>
+                <select id="Status">
+                    <option value="active">Active</option>
+                    <option value="non-active">Non Active</option>
+                </select>
+            </div>
+            
+            <button type="button" onclick="saveData()">ADD</button>
+        </form>
+    </div>
+
+    <br><hr><br>
+
+    <div class="table-container">
+        <h2>Stored Data</h2>
+        <table border="1">
+
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+            <tbody id="dataRow"></tbody>
+
+        </table>
+    </div>
+
+    <script>
+        function saveData() {
+            const name = document.getElementById("Name").value;
+            const phone = document.getElementById("Phone").value;
+            const email = document.getElementById("Email").value;
+            const status = document.getElementById("Status").value;
+
+            if(phone == string){
+                aler("enter a number")
+            }
+
+            const userData = {
+                name,
+                phone,
+                email,
+                status
+            };
+
+            let existingData = JSON.parse(localStorage.getItem("formDataList")) || [];
+            existingData.push(userData);
+
+            
+            localStorage.setItem("formDataList", JSON.stringify(existingData));
+
+
+            document.getElementById("userForm").reset();
+
+         
+            displayData();
+        }
+
+        function displayData() {
+        const dataList = JSON.parse(localStorage.getItem("formDataList")) || [];
+
+        let rows = "";
+        dataList.forEach(data => {
+            rows += `
+                <tr class="tables">
+                    <td>${data.name}</td>
+                    <td>${data.phone}</td>
+                    <td>${data.email}</td>
+                    <td>${data.status}</td>
+                </tr>
+            `;
+        });
+
+        document.getElementById("dataRow").innerHTML = rows;
+    }
+
+      
+        window.onload = displayData;
+    </script>
+
+</body>
+</html>

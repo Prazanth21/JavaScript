@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CRUD Table App</title>
+    <link rel='stylesheet' type='text/css' media='screen' href='style.css'>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>CRUD IN TABLE</h2>
+        <form id="userForm" onsubmit="saveData(event)">
+            <div class="form-row">
+                <label for="Name">Name:</label>
+                <input id="Name" type="text" placeholder="Enter name" oninput="validateName(this)">
+            </div>    
+
+            <div class="form-row">
+                <label for="Phone">Phone:</label>
+                <input id="Phone" type="tel" placeholder="Phone Number" oninput="validatePhone(this)">
+            </div>
+
+            <div class="form-row">
+                <label for="Email">Email:</label>
+                <input id="Email" type="email" placeholder="Email" oninput="validateEmail(this)">
+            </div>
+
+            <div class="form-row">
+                <label for="Status">Status:</label>
+                <select id="Status">
+                    <option value="active">Active</option>
+                    <option value="inactive">InActive</option>
+                </select>
+            </div>
+
+            <button type="submit">ADD</button>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <h2>Stored Data</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Actions </th>
+                </tr>
+            </thead>
+            <tbody id="dataRow"></tbody>
+        </table>
+    </div>
+
+    <script>
+        function validateName(input) {
+            if (!input.value.trim()) {
+                input.setCustomValidity("Name is required.");
+            } else if (!/^[A-Za-z\s]+$/.test(input.value)) {
+                input.setCustomValidity("Only letters and spaces are allowed.");
+            } else {
+                input.setCustomValidity("");
+            }
+        }
+
+        function validatePhone(input) {
+            if (!input.value.trim()) {
+                input.setCustomValidity("Phone number is required.");
+            } else if (!/^\d{10}$/.test(input.value)) {
+                input.setCustomValidity("Phone number must be exactly 10 digits.");
+            } else {
+                input.setCustomValidity("");
+            }
+        }
+
+        function validateEmail(input) {
+            if (!input.value.trim()) {
+                input.setCustomValidity("Email ID is required.");
+            } else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(input.value)) {
+                input.setCustomValidity("Enter a valid Email ID.");
+            } else {
+                input.setCustomValidity("");
+            }
+        }
+
+        let editIndex = null;
+
+        function saveData(event) {
+            event.preventDefault();
+
+            const nameInput = document.getElementById("Name");
+            const phoneInput = document.getElementById("Phone");
+            const emailInput = document.getElementById("Email");
+            const status = document.getElementById("Status").value;
+
+            // Validate fields
+            validateName(nameInput);
+            validatePhone(phoneInput);
+            validateEmail(emailInput);
+
+            // Check validity and show error messages
+            if (
+                !nameInput.reportValidity() ||
+                !phoneInput.reportValidity() ||
+                !emailInput.reportValidity()
+            ) {
+                return;
+            }
+
+            const userData = {
+                name: nameInput.value,
+                phone: phoneInput.value,
+                email: emailInput.value,
+                status: status
+            };
+
+            let existingData = JSON.parse(localStorage.getItem("formDataList")) || [];
+
+            if (editIndex !== null) {
+                existingData[editIndex] = userData;
+                editIndex = null;
+            } else {
+                existingData.push(userData);
+            }
+
+            localStorage.setItem("formDataList", JSON.stringify(existingData));
+            document.getElementById("userForm").reset();
+            displayData();
+        }
+
+        function displayData() {
+            const dataList = JSON.parse(localStorage.getItem("formDataList")) || [];
+            const dataRow = document.getElementById("dataRow");
+            dataRow.innerHTML = "";
+
+            dataList.forEach((data, index) => {
+                const row = `
+                    <tr>
+                        <td>${data.name}</td>
+                        <td>${data.phone}</td>
+                        <td>${data.email}</td>
+                        <td>${data.status}</td>
+                        <td>
+                            <button onclick="editData(${index})">Edit</button>
+                            <button class="d" onclick="deleteData(${index})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+                dataRow.innerHTML += row;
+            });
+        }
+
+        function editData(index) {
+            const dataList = JSON.parse(localStorage.getItem("formDataList")) || [];
+            const data = dataList[index];
+
+            document.getElementById("Name").value = data.name;
+            document.getElementById("Phone").value = data.phone;
+            document.getElementById("Email").value = data.email;
+            document.getElementById("Status").value = data.status;
+
+            editIndex = index;
+        }
+
+        function deleteData(index) {
+            let dataList = JSON.parse(localStorage.getItem("formDataList")) || [];
+            if (confirm("Are you sure you want to delete?")) {
+                dataList.splice(index, 1);
+                localStorage.setItem("formDataList", JSON.stringify(dataList));
+                displayData();
+            }
+        }
+
+        window.onload = displayData;
+    </script>
+
+</body>
+</html>
