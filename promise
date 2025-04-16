@@ -8,6 +8,7 @@
     
 </head>
 <body>
+<button onclick="getTicket()"> booked status </button>
     <script>
         trainticket = false;
 
